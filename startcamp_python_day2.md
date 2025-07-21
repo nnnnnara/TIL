@@ -121,17 +121,17 @@ Date:   Thu Jul 17 11:27:25 2025 +0900
   git commit 실습
 
 1. 바탕화면에 git_commit 폴더를 만들고 git 저장소 생성
-```[python]
-mkdir git_commit
-cd git_commit
-git init
-```
+    ```[python]
+    mkdir git_commit
+    cd git_commit
+    git init
+    ```
 2. 해당 폴더 안에 a.txt라는 텍스트 파일을 만들고, "add a.txt"라는 커밋 메세지로 커밋 생성
-```[pythod]
-touch a.txt
-git add a.txt
-git commit -m "add a.txt"
-```
+    ```[pythod]
+    touch a.txt
+    git add a.txt
+    git commit -m "add a.txt"
+    ```
 3. 이번에는 b.txt라는 텍스트 파일을 만들고, "add b.txt"라는 커밋 메세지로 커밋 생성
    ```
    touch b.txt
@@ -174,3 +174,103 @@ git commit -m "add a.txt"
 
 - git init 주의사항
   - git 로컬 저장소 내에 또 다른 git 로컬 저장소를 만들지 말 것
+
+
+## Commit 메시지 수정
+git commit --amend
+```[python]
+$ cd ~/Desktop
+$ mkdir git-amend-practice
+$ cd git-amend-practice
+$ git init
+$ touch README.md
+$ git add .
+$ git commit -m "기능 구현 완료"
+$ git log --oneline
+$ git commit --amend # i(입력)후 수정, Esc + :wq (나감)
+$ git log --oneline # commit 메시지 수정된 것을 확인 가능
+```
+
+## Commit 전체 수정
+```[python]
+$ touch b-function.txt
+$ git add .
+$ git commit --amend # b.txt 파일도 추가됨
+```
+
+### git commit --amend 정리
+- 버전관리 측면에서 봤을 때, "앗, 빠진 파일 넣었음", "이전 commit에서 오타 살짝 고침"과 같은 commit은 유효한 버전이라고 보기 어려움
+- 즉, 불필요한 commit을 생성하지 않고, 직전 commit을 수정할 수 있기 때문에 git에서 꼭 필요한 기능 중에 하나라고 볼 수 있음
+
+## Remote Repository
+원격 저장소 : 코드와 버전 관리 이력을 온라인 상의 특정 위치에 저장하여 여러 개발자가 협업하고 코드를 공유할 수 있는 저장 공간
+
+### 로컬 & 원격 저장소
+- remote
+
+    git remote add origin_remote_repo_url : 로컬 저장소에 원격 저장소 추가
+
+    origin : 추가하는 원격 저장소 별칭, 별칭을 사용해 로컬 저장소 한 개에 여러 원격 저장소를 추가할 수 있음
+
+    remote_repo_url : 추가하는 원격 저장소 주소, 추가하는 원격 저장소의 URL
+
+    ```[python]
+    $ git remote add origin https://github.com/nnnnnara/first-repo.git
+    $ git remote -v
+    origin https://github.com/nnnnnara/first-repo.git (fetch)
+    origin https://github.com/nnnnnara/first-repo.git (push)
+    ```
+
+- push
+
+    git push origin master : 원격 저장소에 commit 목록을 업로드 "git아, push해줘 origin이라는 이름의 원격 저장소에 master라는 이름의 브랜치를"
+    
+    ```[python]
+    $ git log # ex) second commit까지 있음
+    $ git add sample.txt
+    $ git commit -m "third commit"
+    $ git push origin master
+    $ git log --oneline # third commit 추가된 것을 원격 저장소에서도 확인 가능
+    ```
+    **원격 저장소에는 commit이 올라가는 것**: commit이력이 없다면 push 할 수 없다.
+
+- pull & clone
+    git pull origin master : 원격 저장소의 변경 사항 만을 받아옴(업데이트)
+    git clone remote_repo_url : 원격 저장소 전체를 복제(다운로드), clone으로 받은 프로젝트는 이미 git init 되어있음
+
+    - git remote remove origin 
+        
+        0단계 : 각자의 깃헙에 새로운 repo를 만든다
+        1단계 : 각자 로컷 깃 저장소와 연결한다.
+    
+    - clone 실습
+
+        1번 : 본인의 깃헙(원격) repo주소를 2번에게 알려준다.
+
+        2번 : 깃으로 관리되지 않는 새로운 폴더를 만들고, 1번의 깃헙 레포를 클론한다.
+        ```[python]
+        $ cd ~/Desktop
+        $ mkdir hayun
+        $ cd hayun
+        $ git clone https://github.com/moonhayun116/first-repo
+        $ ls # first-repo/
+        $ cd first-repo
+        $ ls # sample.txt
+        $ git log # 하윤꺼 확인 가능
+        ```
+
+    - pull 실습
+
+        1번 : 로컬저장소에서 특정 파일을 변경하고 add, commit, push
+        
+       - 1번의 깃헙저장소의 commit과 1번의 로컬저장소 commit 일치 확인
+
+        2번 : 1번의 깃헙 저장소에서 pull
+
+       - 2번의 로컬 저장소와 1번의 로컬 저장소 commit 일치 확인
+
+        ```[python]
+        $ git add sample.txt
+        $ git commit -m "fourth commit"
+        $ git push origin master
+        ```
