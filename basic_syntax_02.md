@@ -755,3 +755,45 @@ my_func('value1', 'value2')
 2. 유지보수 용이성
    - 항목 추가/제거가 간단
    - 실수로 인한 구문 오류 방지
+# 얕은 복사(shallow copy) vs 깊은 복사(deep copy)
+### mutable과 immutable
+- mutable: list, set, dict
+- immutable: str, boolean, int, float, tuple
+- 재할당은 변수를 다시 할당하는 것이므로 mutable과 immutable과는 관계 X (재할당 시 메모리 주소 변경)
+
+### 변수간 대입
+- mutable한 객체의 변수 간 대입
+  - 같은 메모리 주소 가짐
+- immutable한 객채의 변수 간 대입
+  - b에 자료형 str a 변수 대입 시 같은 메모리 주소
+  
+### 얕은 복사 (shallow copy)
+- list의 슬라이싱을 통한 값 할당
+  - 다른 메모리 주소
+  - 그래도 얕은 복사에 해당
+- mutable 객체 안에 mutable 객체인 경우 문제
+- **a와 b의 메모리 주소 값은 다르지만 a[0]과 b[0]은 같은 메모리 주소**
+- a[1]의 값 변경 시 b[1]의 값도 변경됨
+- copy 모듈의 copy 메소드 또한 얕은 복사
+```[python]
+import copy
+a = [[1, 2], [3, 4]]
+b = copy.copy(a)
+a[1].append(5)
+
+print(a) # [[1, 2], [3, 4, 5]]
+print(b) # [[1, 2], [3, 4, 5]]
+```
+
+### 깊은 복사 (deep copy)
+- 내부의 객체들까지 모두 새롭게 copy
+- copy.deepcopy메소드가 해결
+```[python]
+import copy
+a = [[1, 2], [3, 4]]
+b = copy.deepcopy(a)
+a[1].append(5)
+
+print(a) # [[1, 2], [3, 4, 5]]
+print(b) # [[1, 2], [3, 4]]
+```
